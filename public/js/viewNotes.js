@@ -35,13 +35,15 @@ const renderDataAsHtml = (data) => {
 };
 
 const createCard = (note, noteId) => {
-    if(note.password){
-   return  `
-    <button class="button is-danger"  onclick="shownote('${noteId}', '${note.title}', '${note.text}', '${note.archive}')">Enter password</button>
+    if (note.password) {
+        return `
+        <div class="column is-one-quarter">
+        <button class="button is-danger"  onclick="shownote('${noteId}', '${note.title}', '${note.text}', '${note.archive}')">Enter password</button>
+      </div>
    
    `
-    } else if(note.archive !== true ){
-    return `
+    } else if (note.archive !== true) {
+        return `
      <div class="column is-one-quarter">
        <div class="card">
          <header class="card-header">
@@ -117,20 +119,22 @@ function archive(noteId, title, text) {
 };
 
 
-function shownote(noteId, title, text, archive){
+function shownote(noteId, title, text, archive) {
     const inp = String(prompt("What is the password"));
-   console.log()
+    console.log()
     const notesRef = firebase.database().ref(`users/${googleUserId}/${noteId}`);
     notesRef.on('value', (snapshot) => {
         const data = snapshot.val();
         console.log(data.password, String(inp))
-        if(data.password === String(inp)){
-  firebase.database().ref(`users/${googleUserId}/${noteId}`).update({
-        title: title,
-        text: text,
-        archive: false,
-        password: ''
-    })
+        if (data.password === String(inp)) {
+            firebase.database().ref(`users/${googleUserId}/${noteId}`).update({
+                title: title,
+                text: text,
+                archive: false,
+                password: ''
+            })
+        } else {
+            alert("Wrong password ")
         }
     });
 
